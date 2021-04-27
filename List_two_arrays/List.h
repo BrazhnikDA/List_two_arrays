@@ -145,6 +145,7 @@ void List::DelLast()
 
 void List::DelList()
 {
+	it.Del_It();
 	pFirst = nullptr;
 	pLast = nullptr;
 	ListLen = 0;

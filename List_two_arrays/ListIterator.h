@@ -22,6 +22,8 @@ public:
 
 	Node* insert(int val);
 
+	void Del_It();
+
 };
 
 
@@ -95,11 +97,10 @@ inline Node* ListIterator::del_cur(Node* n)
 
 inline Node* ListIterator::insert(int val)
 {
-	if (check_current())
-	{
-		NodeList = NodeList->Next;
-		NodeList->data = val;
-		return NodeList;
-	}
-	return nullptr;
+	return new Node(val, NodeList);
+}
+
+inline void ListIterator::Del_It()
+{
+	NodeList = nullptr;
 }
