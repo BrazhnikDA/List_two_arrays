@@ -200,10 +200,11 @@ void List::DelValue(int pos)
 		return;
 	}
 	Node* tmp = pFirst;
+	it.init(tmp);
 	int count = 0;
 	while (count != pos - 1)
 	{
-		tmp = tmp->Next;
+		it.go_next();
 		count++;
 	}
 	Node* tmp2 = tmp->Next->Next;
@@ -214,16 +215,15 @@ void List::DelValue(int pos)
 
 void List::print()
 {
-	if (pFirst != nullptr)
+	it.init(pFirst);
+	if (it.check_current())
 	{
-		Node* tmp = pFirst;
-		while (tmp->Next != nullptr)
+		while (it.check_next())
 		{
-
-			std::cout << tmp->data << "->";
-			tmp = tmp->Next;
+			std::cout << it.get_value() << "->";
+			it.go_next();
 		}
-		std::cout << tmp->data << "->";
+		std::cout << it.get_value() << "->";
 	}
 	std::cout << "List length - " << GetListLenght() << "\n";
 }
@@ -246,16 +246,16 @@ bool List::search(int data)
 			return false;
 		}
 	}
-	Node* tmp = pFirst;
-	while (tmp->Next != nullptr)
+	it.init(pFirst);
+	while (it.check_next())
 	{
-		if (tmp->data == data)
+		if (it.get_value() == data)
 		{
 			return true;
 		}
-		tmp = tmp->Next;
+		it.go_next();
 	}
-	if (tmp->data == data)
+	if (it.get_value() == data)
 	{
 		return true;
 	}
@@ -269,14 +269,14 @@ int List::get(int pos)
 	{
 		throw std::out_of_range("Input error: invalide input value");
 	}
-	Node* tmp = pFirst;
+	it.init(pFirst);
 	int count = 0;
 	while (count != pos)
 	{
-		tmp = tmp->Next;
+		it.go_next();
 		count++;
 	} 
-	return tmp->data;
+	return it.get_value();
 
 }
 
@@ -292,55 +292,25 @@ bool List::IsSort()
 	return true;
 }
 
-/*
-inline bool List::check_current()
-{
-	if (pFirst != nullptr)
-	{
-		return true;
-	}
-	else { return false; }
-}
-
-inline bool List::check_next()
-{
-	if (pFirst->Next != nullptr)
-	{
-		return true;
-	}
-	else { return false; }
-}
-
-inline Node* List::ins_next(int val)
-{
-	if (!check_current())
-	{
-		return new Node(val);
-	}
-	else
-	{
-		return new Node(val, pFirst);
-	}
-}
-*/
-
 inline List* List::findSpecialElements(int K)
 {
 	List* res = new List();
-	if (pFirst != nullptr)
+	it.init(pFirst);
+	if (it.check_current())
 	{
 		Node* tmp = pFirst;
-		while (tmp->Next != nullptr)
+		while (it.check_next())
 		{
-			if (tmp->data % K == 0)
+			if (it.get_value() % K == 0)
 			{
-				res->InsFirst(tmp->data);
+				res->InsFirst(it.get_value());
 			}
-			tmp = tmp->Next;
+			it.go_next();
 		}
-		if (tmp->data % K == 0)
+		// Последнее значение
+		if (it.get_value() % K == 0)
 		{
-			res->InsFirst(tmp->data);
+			res->InsFirst(it.get_value());
 		}
 	}
 	return res;
@@ -351,16 +321,16 @@ inline void List::WriteFile(std::string path)
 	std::ofstream file(path, std::ios::trunc);
 	if (file.is_open())
 	{
-		if (pFirst != nullptr)
+		it.init(pFirst);
+		if (it.check_current())
 		{
-			Node* tmp = pFirst;
-			while (tmp->Next != nullptr)
+			while (it.check_next())
 			{
 
-				file << tmp->data << "->";
-				tmp = tmp->Next;
+				file << it.get_value() << "->";
+				it.go_next();
 			}
-			file << tmp->data;
+			file << it.get_value();
 		}
 	}
 	else

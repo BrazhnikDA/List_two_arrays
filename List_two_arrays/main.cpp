@@ -39,6 +39,12 @@ int main()
 	s.print();
 	s.InsValue(366, 2);
 	s.print();
+	s.DelValue(2);
+	s.print();
+	
+	if (s.search(3))
+		std::cout << "\nsearch\n";
+	else { std::cout << "\nNot find\n"; }
 
 
 	list1.InsFirst(15);
