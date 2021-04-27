@@ -4,9 +4,9 @@
 #include <string>
 
 class ListIterator {
-private:
-	Node* NodeList;
 public:
+	Node* NodeList;
+
 	ListIterator();
 	ListIterator(Node* n);
 
@@ -18,9 +18,9 @@ public:
 	void go_next();
 	int  get_value();
 
-	void del_cur();
+	Node* del_cur(Node* n);
 
-	void insert_before(int val);
+	Node* insert(int val);
 
 };
 
@@ -83,15 +83,23 @@ inline int ListIterator::get_value()
 	}
 }
 
-inline void ListIterator::insert_before(int val)
+inline Node* ListIterator::del_cur(Node* n)
+{
+	NodeList = n;
+	Node* tmp = NodeList;
+	
+	NodeList = NodeList->Next;
+	delete tmp;
+	return NodeList;
+}
+
+inline Node* ListIterator::insert(int val)
 {
 	if (check_current())
 	{
-		if (check_next())
-		{
-
-			NodeList = NodeList->Next;
-			NodeList->data = val;
-		}
+		NodeList = NodeList->Next;
+		NodeList->data = val;
+		return NodeList;
 	}
+	return nullptr;
 }

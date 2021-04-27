@@ -1,5 +1,5 @@
 #include "Node.h"
-//#include "ListIterator.h"
+#include "ListIterator.h"
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -9,7 +9,7 @@ class List
 protected:
 	Node* pFirst;
 	Node* pLast;
-	//ListIterator it;
+	ListIterator it;
 	int ListLen;
 public:
 	List();
@@ -33,12 +33,6 @@ public:
 	bool search(int data);				// Проверка есть ли элемент в списке
 	int	 get(int pos);					// Получить значение по позиции
 	bool IsSort();						// Проверка отсортирован ли список по возрастанию
-
-	//iterator
-	bool check_current();
-	bool check_next();
-	Node* ins_next(int val);
-	int  get_value();
 
 	List* findSpecialElements(int K);	// Возвращает список в котором каждый элемент делится на цело на K
 
@@ -70,14 +64,15 @@ bool List::IsEmpty()
 
 void List::InsFirst(int Val)
 {
-	if (!check_current())
+	it.init(pFirst);
+	if (!it.check_current())
 	{
-		pFirst = ins_next(Val);
+		pFirst = it.insert(Val);
 		pLast = pFirst;
 	}
 	else
 	{
-		pFirst = ins_next(Val);
+		pFirst = it.insert(Val);
 	}
 	ListLen++;
 }
@@ -85,9 +80,10 @@ void List::InsFirst(int Val)
 
 void List::InsLast(int Val)
 {
-	if (pFirst == nullptr)
+	it.init(pFirst);
+	if (!it.check_current())
 	{
-		pFirst = new Node(Val);
+		pFirst = it.insert(Val);
 		pLast = pFirst;
 	}
 	else
@@ -102,7 +98,8 @@ void List::InsLast(int Val)
 
 void List::DelFirst()
 {
-	if (pFirst == nullptr)
+	it.init(pFirst);
+	if (!it.check_current())
 	{
 		return;
 	}
@@ -114,15 +111,15 @@ void List::DelFirst()
 		ListLen--;
 		return;
 	}
-	Node* tmp = pFirst;
-	delete tmp;
+	pFirst = it.del_cur(pFirst);
 	ListLen--;
 }
 
 
 void List::DelLast()
 {
-	if (pFirst == nullptr)
+	it.init(pFirst);
+	if (!it.check_current())
 	{
 		return;
 	}
@@ -134,6 +131,7 @@ void List::DelLast()
 		ListLen--;
 		return;
 	}
+	
 	Node* tmp = pFirst;
 	while (tmp->Next->Next != nullptr)
 	{
@@ -142,13 +140,14 @@ void List::DelLast()
 	delete tmp->Next;
 	tmp->Next = nullptr;
 	pLast = tmp;
-	ListLen--;
 }
 
 
 void List::DelList()
 {
-	while (ListLen != 0) { DelLast(); }
+	pFirst = nullptr;
+	pLast = nullptr;
+	ListLen = 0;
 }
 
 
@@ -170,12 +169,14 @@ void List::InsValue(int Val, int pos)
 	}
 	int count = 0;
 	Node* tmp = pFirst;
+	it.init(tmp);
 	while (count != pos - 1)
 	{
-		tmp = tmp->Next;
+		it.go_next();
 		count++;
 	}
 	Node* newNode = new Node(Val, tmp->Next);
+	it.insert(Val);
 	tmp->Next = newNode;
 	ListLen++;
 }
@@ -290,6 +291,7 @@ bool List::IsSort()
 	return true;
 }
 
+/*
 inline bool List::check_current()
 {
 	if (pFirst != nullptr)
@@ -319,6 +321,7 @@ inline Node* List::ins_next(int val)
 		return new Node(val, pFirst);
 	}
 }
+*/
 
 inline List* List::findSpecialElements(int K)
 {

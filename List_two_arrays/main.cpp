@@ -23,10 +23,21 @@ int main()
 	s.InsFirst(11);
 	s.InsFirst(6);
 	s.InsFirst(9);
+	s.InsLast(10101);
 
-	//s.InsLast(010101);
-
-	std::cout << "Исходный список: ";
+	std::cout << "Исходный список: \n";
+	s.print();
+	s.DelFirst();
+	s.print();
+	s.DelList();
+	s.InsFirst(3);
+	s.InsFirst(4);
+	s.InsLast(5);
+	s.InsLast(7);
+	s.print();
+	s.DelLast();
+	s.print();
+	s.InsValue(366, 2);
 	s.print();
 
 
